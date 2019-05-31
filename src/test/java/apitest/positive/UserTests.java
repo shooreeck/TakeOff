@@ -48,13 +48,6 @@ public class UserTests extends BasicTestClass {
     }
 
     @Test
-    public void createNewUserCheckValuesTest() throws IOException {
-        User user = new User().getUser(createNewUserGetResponse(body));
-        assertEquals(user.getName(), userName);
-        assertEquals(user.getJob(), job);
-    }
-
-    @Test
     public void updateUserTest() throws IOException {
         JSONObject updatedBody = new JSONObject();
         updatedBody.put("name", generateString());
