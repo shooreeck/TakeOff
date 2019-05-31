@@ -3,14 +3,16 @@ package apitest.negative;
 import apitest.BasicTestClass;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
-import objects.User;
 import org.json.simple.JSONObject;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import java.io.IOException;
-
 import static io.restassured.RestAssured.given;
+
+/**
+ * There is no sense in this class, cause endpoints does not have any validations!
+ * Wrote tests as if validation is present
+ */
 
 public class UserTestsNegative extends BasicTestClass {
 

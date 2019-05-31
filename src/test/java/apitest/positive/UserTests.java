@@ -1,6 +1,7 @@
 package apitest.positive;
 
 import apitest.BasicTestClass;
+import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import objects.User;
 import org.json.simple.JSONObject;
@@ -10,6 +11,7 @@ import org.testng.annotations.Test;
 import java.io.IOException;
 
 import static io.restassured.RestAssured.given;
+import static org.hamcrest.Matchers.equalTo;
 
 public class UserTests extends BasicTestClass {
 
@@ -27,14 +29,22 @@ public class UserTests extends BasicTestClass {
     }
 
     @Test
-    public void createNewUserTest() throws IOException {
+    public void createNewUserTest() {
         Response response = createNewUserGetResponse(body);
+        response.then()
+                .statusCode(201)
+                .and().assertThat()
+                .contentType(ContentType.JSON)
+                .and().assertThat()
+                .body(
+                        "name", equalTo(userName),
+                        "job", equalTo(job));
 
-        assertCodeAndContentType(response, 201);
-        User user = new User().getUser(response);
-
-        assertEquals(user.getName(), userName);
-        assertEquals(user.getJob(), job);
+        String responseString = response.thenReturn().body().asString();
+        assertTrue(responseString.contains("\"createdAt\""));
+        assertTrue(responseString.contains("\"name\""));
+        assertTrue(responseString.contains("\"job\""));
+        assertTrue(responseString.contains("\"id\""));
     }
 
     @Test
@@ -47,14 +57,17 @@ public class UserTests extends BasicTestClass {
                 .getUser(createNewUserGetResponse(body)).getId();
 
         Response response = given()
-                .header("Content-type", "application/json")
+                .contentType(ContentType.JSON)
                 .body(updatedBody)
                 .baseUri(URL)
                 .put("/users/" + userId);
 
-        assertCodeAndContentType(response, 200);
+        response.then()
+                .statusCode(200)
+                .and().assertThat()
+                .contentType(ContentType.JSON);
 
-        String responseString = response.as(JSONObject.class).toJSONString();
+        String responseString = response.thenReturn().body().asString();
         assertTrue(responseString.contains("\"updatedAt\""));
         assertTrue(responseString.contains("\"name\""));
         assertTrue(responseString.contains("\"job\""));
@@ -62,14 +75,9 @@ public class UserTests extends BasicTestClass {
 
     private Response createNewUserGetResponse(JSONObject body) {
         return given()
-                .header("Content-type", "application/json")
+                .contentType(ContentType.JSON)
                 .body(body)
                 .baseUri(URL)
                 .post("/users");
-    }
-
-    private void assertCodeAndContentType(Response response, int code) {
-        assertEquals(response.getStatusCode(), code);
-        assertTrue(response.getContentType().contains("json"));
     }
 }
