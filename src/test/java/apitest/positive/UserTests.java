@@ -29,7 +29,7 @@ public class UserTests extends BasicTestClass {
     }
 
     @Test
-    public void createNewUserTest() {
+    public void createNewUserCheckResponseTest() {
         Response response = createNewUserGetResponse(body);
         response.then()
                 .statusCode(201)
@@ -45,6 +45,13 @@ public class UserTests extends BasicTestClass {
         assertTrue(responseString.contains("\"name\""));
         assertTrue(responseString.contains("\"job\""));
         assertTrue(responseString.contains("\"id\""));
+    }
+
+    @Test
+    public void createNewUserCheckValuesTest() throws IOException {
+        User user = new User().getUser(createNewUserGetResponse(body));
+        assertEquals(user.getName(), userName);
+        assertEquals(user.getJob(), job);
     }
 
     @Test

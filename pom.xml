@@ -8,11 +8,16 @@
     <artifactId>TakeOff</artifactId>
     <version>1.0-SNAPSHOT</version>
 
-    <description>Test task for the TakeOff company (Rest assured)</description>
+    <description>Test task for the TakeOff company (Rest Assured)</description>
     <developers>
         <developer>
             <name>Oleksandr Turkov</name>
             <email>shooreeck.ua@gmail.com</email>
+            <roles>
+                <role>
+                    QA Engineer
+                </role>
+            </roles>
         </developer>
     </developers>
 
